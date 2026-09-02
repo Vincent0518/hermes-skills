@@ -1,0 +1,41 @@
+name: Sync Skills Pipeline
+
+on:
+  push:
+    paths:
+      - 'skills/**'
+  schedule:
+    - cron: '20 23 * * *'   # 每天 23:20 UTC = 07:20 CST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate skill frontmatter
+        shell: bash
+        run: |
+          set -u
+          fail=0
+          count=0
+          while IFS= read -r f; do
+            count=$((count+1))
+            name=$(awk -F': ' '/^name:/{sub(/^ *name: */,""); print; exit}' "$f")
+            desc=$(awk -F': ' '/^description:/{sub(/^ *description: */,""); print; exit}' "$f")
+            dir="$(basename "$(dirname "$f")")"
+            echo "::notice::$f"
+            [ -z "$name" ] && { echo "::error file=$f,msg=missing name"; fail=1; }
+            [ -z "$desc" ] && { echo "::error file=$f,msg=missing description"; fail=1; }
+            dlen=${#desc}
+            echo "::notice::$f desc_len=$dlen"
+            [ "$dlen" -gt 60 ] && echo "::warning file=$f,msg=description ${dlen}>60 chars (budget, non-blocking)"
+            [ "$name" != "$dir" ] && echo "::warning file=$f,msg=name($name)!=dir($dir)"
+          done < <(find skills -name SKILL.md -type f 2>/dev/null | sort)
+          echo "validated $count skill(s)"
+          [ "$count" -eq 0 ] && { echo "::error::no skills found under skills/"; fail=1; }
+          exit "$fail"

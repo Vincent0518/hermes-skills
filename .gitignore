@@ -1,0 +1,6 @@
+# 系统/构建垃圾
+.DS_Store
+__pycache__/
+*.pyc
+*.bak*
+*.repair-candidate
