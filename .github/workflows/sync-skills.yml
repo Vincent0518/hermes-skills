@@ -17,6 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Security gate (keys/passwords/private-IP/MAC must be absent)
+        shell: bash
+        run: |
+          python3 scripts/scan-secrets.py skills
+
       - name: Validate skill frontmatter
         shell: bash
         run: |
