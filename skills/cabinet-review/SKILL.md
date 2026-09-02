@@ -58,7 +58,7 @@ Hermes 议长综合裁决（对比表 + 最终裁决）
 - **记录内容**：议题（用户原话）、结论、三席置信度、关键风险、最终裁决要点。
 - **记录格式**（追加到当日日记的 `## Hermes` 段，参考 work-diary 技能）：
   `- HH:MM | 内阁评估(<轮次>, <议题简述>): 结论=... 架构/要点... 置信度=... ref: [[cabinet-review]]`
-- **Mac mini 侧**：mini 直写 NAS（`ssh nas@100.108.177.1 "cat >> /home/nas/wiki/work-diary/YYYY-MM-DD.md"`，ssh stdin 传输，勿用 scp——NAS sftp 子系统受限）。
+- **Mac mini 侧**：mini 直写 NAS（`ssh nas@<NAS-Tailscale-IP> "cat >> /home/nas/wiki/work-diary/YYYY-MM-DD.md"`，ssh stdin 传输，勿用 scp——NAS sftp 子系统受限；具体 IP 见本地私有参考，勿写进可上传文档）。
 - **MacBook 侧**：MacBook 本地 `~/wiki` 为主副本，写 `~/wiki/work-diary/YYYY-MM-DD.md` 即可（MacBook 的每小时双向 sync 会推到 NAS）。
 - **同步保障**：NAS 是权威源，MacBook 每小时 `sync-wiki-to-nas.sh`（已修 `--keep-newer-files` 双向保护）自动把 NAS 更新拉回 MacBook——mini 写 NAS 的评估会自动出现在 MacBook 的 Obsidian 里。
 - **验证**：写完后确认当日日记文件存在且包含议题关键词（`grep -c` 或 `tail`），不确认不算完成。
