@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'skills/**'
+      - '.github/workflows/sync-skills.yml'
+      - 'scripts/scan-secrets.py'
   schedule:
     - cron: '20 23 * * *'   # 每天 23:20 UTC = 07:20 CST
   workflow_dispatch:
